@@ -1,0 +1,10 @@
+{
+  "name": "paywall-upgrade-cro",
+  "description": "",
+  "source": "coreyhaines31/marketingskills",
+  "sourceType": "github",
+  "subpath": "paywall-upgrade-cro",
+  "installedAt": "2026-05-01T09:30:19.344Z",
+  "enabled": true,
+  "checksum": "aa09549f503bb656"
+}
