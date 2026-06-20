@@ -5,3 +5,7 @@
 	path = .agents/stitch-skills
 	url = https://github.com/google-labs-code/stitch-skills
 	branch = main
+[submodule ".agents/plugins/andrej-karpathy-skills"]
+	path = .agents/plugins/andrej-karpathy-skills
+	url = https://github.com/forrestchang/andrej-karpathy-skills
+	branch = main
