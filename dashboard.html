@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERPSim Sales Dashboard — Muesli Co. Germany</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d2e;
+    --surface2: #242740;
+    --border: #2e3255;
+    --text: #e8eaf6;
+    --text-muted: #8891b8;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #ffd93d;
+    --accent5: #4ecdc4;
+    --tab-active: #6c63ff;
+    --green: #00d4aa;
+    --red: #ff6b6b;
+    --yellow: #ffd93d;
+    --orange: #ff9f43;
+    --blue: #74b9ff;
+    --purple: #a29bfe;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a1d2e 0%, #242740 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #6c63ff, #00d4aa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header-left p {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .header-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* TABS */
+  .tabs-wrapper {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 14px 20px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--tab-active);
+    border-bottom-color: var(--tab-active);
+  }
+  .tab-icon { font-size: 16px; }
+
+  /* CONTENT */
+  .content { padding: 28px 32px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* KPI CARDS */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.blue::before { background: var(--blue); }
+  .kpi-card.purple::before { background: var(--purple); }
+  .kpi-card.yellow::before { background: var(--yellow); }
+  .kpi-card.red::before { background: var(--red); }
+  .kpi-card.orange::before { background: var(--orange); }
+  .kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .kpi-trend {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .kpi-trend.up { color: var(--green); }
+  .kpi-trend.down { color: var(--red); }
+
+  /* CHART GRID */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .chart-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .chart-full {
+    margin-bottom: 20px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title span { font-size: 11px; background: var(--surface2); border-radius: 6px; padding: 3px 8px; }
+  canvas { max-width: 100%; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    white-space: nowrap;
+  }
+  tr:hover td { background: rgba(108,99,255,0.05); }
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-green { background: rgba(0,212,170,0.15); color: var(--green); }
+  .badge-blue { background: rgba(116,185,255,0.15); color: var(--blue); }
+  .badge-yellow { background: rgba(255,217,61,0.15); color: var(--yellow); }
+  .badge-purple { background: rgba(162,155,254,0.15); color: var(--purple); }
+  .badge-red { background: rgba(255,107,107,0.15); color: var(--red); }
+  .badge-orange { background: rgba(255,159,67,0.15); color: var(--orange); }
+
+  /* BAR MINI */
+  .bar-cell { display: flex; align-items: center; gap: 8px; }
+  .bar-mini { height: 6px; border-radius: 3px; background: var(--accent); min-width: 4px; }
+
+  /* INSIGHT BOX */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .insight {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .insight.warn { border-left-color: var(--yellow); }
+  .insight.danger { border-left-color: var(--red); }
+  .insight.good { border-left-color: var(--green); }
+  .insight h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .insight p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    margin-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* PROGRESS BAR */
+  .progress-row { margin-bottom: 12px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+  .progress-label span:last-child { color: var(--text-muted); }
+  .progress-bar-bg { background: var(--surface2); border-radius: 4px; height: 8px; }
+  .progress-bar-fill { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+  /* WATERFALL */
+  .waterfall { display: flex; gap: 4px; align-items: flex-end; height: 120px; margin-top: 8px; }
+  .wf-bar { flex: 1; border-radius: 4px 4px 0 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <h1>🌾 ERPSim Muesli Co. — Sales Intelligence Dashboard</h1>
+    <p>Germany · EUR · Simulation Rounds 1–2 · Jan 5 – Feb 9, 2024 · 12 SKUs · 16 Regions</p>
+  </div>
+  <div class="header-badge">
+    <div class="live-dot"></div>
+    2,064 transactions · 194 customers · 100% fulfillment
+  </div>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tab active" onclick="switchTab('overview')"><span class="tab-icon">📊</span> Overview</div>
+  <div class="tab" onclick="switchTab('sales')"><span class="tab-icon">💰</span> Sales</div>
+  <div class="tab" onclick="switchTab('marketing')"><span class="tab-icon">📣</span> Marketing</div>
+  <div class="tab" onclick="switchTab('product')"><span class="tab-icon">📦</span> Product</div>
+  <div class="tab" onclick="switchTab('logistics')"><span class="tab-icon">🚚</span> Logistics</div>
+  <div class="tab" onclick="switchTab('finance')"><span class="tab-icon">📈</span> Finance</div>
+</div>
+
+<div class="content">
+
+<!-- ============================================================ OVERVIEW -->
+<div class="tab-panel active" id="panel-overview">
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-value">€15.4M</div>
+      <div class="kpi-sub">8 simulation periods</div>
+      <div class="kpi-trend up">+998% P1→P8</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Contribution Margin</div>
+      <div class="kpi-value">€11.2M</div>
+      <div class="kpi-sub">72.9% avg CM%</div>
+      <div class="kpi-trend down">↓ 8.7pts P4→P8</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Total Volume</div>
+      <div class="kpi-value">2.8M</div>
+      <div class="kpi-sub">units sold (ST)</div>
+      <div class="kpi-trend up">+1,075% P1→P8</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Sales Orders</div>
+      <div class="kpi-value">1,064</div>
+      <div class="kpi-sub">across 194 customers</div>
+      <div class="kpi-trend up">150 orders/period (steady)</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Total Cost</div>
+      <div class="kpi-value">€4.2M</div>
+      <div class="kpi-sub">COGS</div>
+      <div class="kpi-trend down">+1,388% P1→P8</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Fulfillment Rate</div>
+      <div class="kpi-value">100%</div>
+      <div class="kpi-sub">all orders fully delivered</div>
+      <div class="kpi-trend up">No stockouts detected</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Revenue, Cost & CM by Period <span>EUR</span></div>
+      <canvas id="cht-overview-waterfall" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue by Product <span>all periods</span></div>
+      <canvas id="cht-overview-donut" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Revenue by Region <span>top 8</span></div>
+      <canvas id="cht-overview-region" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribution Channel Mix <span>revenue share</span></div>
+      <canvas id="cht-overview-channel" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight good">
+      <h4>✅ Perfect Fulfillment</h4>
+      <p>Every single order (2,064 line items) was delivered in full. QUANTITY = QUANTITY_DELIVERED across all periods, channels, and regions. No supply chain failures.</p>
+    </div>
+    <div class="insight warn">
+      <h4>⚠️ CM% Declining Late</h4>
+      <p>Contribution margin % peaked at 76% in Period 4 but dropped to 66.7% by Period 8. Rising COGS (+1,388% vs revenue +998%) is squeezing profitability.</p>
+    </div>
+    <div class="insight">
+      <h4>📊 NRW Dominates</h4>
+      <p>North Rhine-Westphalia accounts for 29.5% of total revenue (€4.5M). Top 3 regions (NRW, Bavaria, Baden-Württemberg) represent 55.4% of all sales.</p>
+    </div>
+    <div class="insight good">
+      <h4>🏆 Strawberry #1</h4>
+      <p>Strawberry Muesli leads all flavors at €4.55M (29.5% of revenue). Both 500g and 1kg formats rank in top 4, showing broad market acceptance.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ SALES -->
+<div class="tab-panel" id="panel-sales">
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">Best Period Revenue</div>
+      <div class="kpi-value">€2.42M</div>
+      <div class="kpi-sub">Period 8 (highest)</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Avg Revenue / Order</div>
+      <div class="kpi-value">€14,481</div>
+      <div class="kpi-sub">per sales order</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Top Customer</div>
+      <div class="kpi-value">€387K</div>
+      <div class="kpi-sub">Customer #80108</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Sales Orgs</div>
+      <div class="kpi-value">4</div>
+      <div class="kpi-sub">G5, H5, I5, J5</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Active Channels</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub">Ch 10, 12, 14</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Avg Qty/Order</div>
+      <div class="kpi-value">2,636</div>
+      <div class="kpi-sub">units per order</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Revenue Trend by Period <span>EUR</span></div>
+      <canvas id="cht-sales-trend" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Sales Organization Performance <span>revenue & CM</span></div>
+      <canvas id="cht-sales-org" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-full card">
+    <div class="card-title">Revenue by Material Stacked by Period <span>product mix evolution</span></div>
+    <canvas id="cht-sales-stack" height="160"></canvas>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Top 15 Customers by Revenue <span>ranked</span></div>
+    <div class="table-wrap">
+      <table id="tbl-customers"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ MARKETING -->
+<div class="tab-panel" id="panel-marketing">
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">Channel 12 Revenue</div>
+      <div class="kpi-value">€9.1M</div>
+      <div class="kpi-sub">59.2% of total — largest</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Channel 14 Customers</div>
+      <div class="kpi-value">123</div>
+      <div class="kpi-sub">most diverse base</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Top Region</div>
+      <div class="kpi-value">NRW</div>
+      <div class="kpi-sub">€4.54M — 29.5% share</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Geographic Coverage</div>
+      <div class="kpi-value">16</div>
+      <div class="kpi-sub">German regions</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Avg Price Trend</div>
+      <div class="kpi-value">↓ 18%</div>
+      <div class="kpi-sub">peak P4 → P8</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Best CM% Flavor</div>
+      <div class="kpi-value">79.7%</div>
+      <div class="kpi-sub">Raisin Muesli</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Price Trend by Flavor <span>avg net price €</span></div>
+      <canvas id="cht-mkt-price" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Channel Revenue & Customer Count <span>mix analysis</span></div>
+      <canvas id="cht-mkt-channel" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Regional Revenue Map <span>all 16 regions</span></div>
+      <canvas id="cht-mkt-region" height="260"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Area Performance (North / South / West) <span>balanced split</span></div>
+      <canvas id="cht-mkt-area" height="260"></canvas>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight">
+      <h4>🎯 Channel 12 = Cash Cow</h4>
+      <p>Channel 12 generates €9.1M with only 59 customers — avg €154K/customer. Channel 14 has 123 customers but yields €4M total (€32K avg). Focus retention on Ch12 accounts.</p>
+    </div>
+    <div class="insight warn">
+      <h4>📉 Price Erosion in Late Periods</h4>
+      <p>Average prices peaked in Period 3–4 then declined through Period 8. Blueberry 1kg dropped from €7.19 (P3) to €5.32 (P8). Possible over-supply or competitive pressure.</p>
+    </div>
+    <div class="insight good">
+      <h4>🌍 Balanced Area Split</h4>
+      <p>Revenue splits remarkably evenly: North €5.1M, South €5.2M, West €5.1M. Geography isn't a constraint — opportunity exists to deepen penetration in all areas.</p>
+    </div>
+    <div class="insight">
+      <h4>💡 Raisin Has Best Margin</h4>
+      <p>Raisin Muesli achieves 79.7% CM% — highest of all flavors. Despite lower volume rank, its pricing power makes it the most profitable product per euro sold.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ PRODUCT -->
+<div class="tab-panel" id="panel-product">
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">SKU Count</div>
+      <div class="kpi-value">12</div>
+      <div class="kpi-sub">6 flavors × 2 sizes</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Top SKU Revenue</div>
+      <div class="kpi-value">€2.35M</div>
+      <div class="kpi-sub">500g Strawberry</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Best CM% Flavor</div>
+      <div class="kpi-value">79.7%</div>
+      <div class="kpi-sub">Raisin Muesli</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">1kg vs 500g Revenue</div>
+      <div class="kpi-value">48% / 52%</div>
+      <div class="kpi-sub">nearly equal split</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Weakest SKU</div>
+      <div class="kpi-value">€125K</div>
+      <div class="kpi-sub">500g Original Muesli</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Avg Price Premium 1kg</div>
+      <div class="kpi-value">+20%</div>
+      <div class="kpi-sub">over 500g (per unit)</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">SKU Revenue Ranking <span>all 12 products</span></div>
+      <canvas id="cht-prod-sku" height="280"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Contribution Margin % by Flavor <span>profitability</span></div>
+      <canvas id="cht-prod-cm" height="280"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">500g vs 1kg: Revenue & Volume <span>size comparison</span></div>
+      <canvas id="cht-prod-size" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Volume Trend by Flavor <span>units sold per period</span></div>
+      <canvas id="cht-prod-vol-trend" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="card chart-full">
+    <div class="card-title">Product Portfolio Matrix <span>revenue vs CM% bubble — size = volume</span></div>
+    <canvas id="cht-prod-bubble" height="220"></canvas>
+  </div>
+</div>
+
+<!-- ============================================================ LOGISTICS -->
+<div class="tab-panel" id="panel-logistics">
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">Fulfillment Rate</div>
+      <div class="kpi-value">100%</div>
+      <div class="kpi-sub">zero shortfalls</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Storage Locations</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub">02N · 02S · 02W</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Units Delivered</div>
+      <div class="kpi-value">2.80M</div>
+      <div class="kpi-sub">= units ordered</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Busiest Period</div>
+      <div class="kpi-value">P8: 537K</div>
+      <div class="kpi-sub">units (+1,075% vs P1)</div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-label">Total Orders</div>
+      <div class="kpi-value">1,064</div>
+      <div class="kpi-sub">avg 2,636 units each</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Coverage</div>
+      <div class="kpi-value">All DE</div>
+      <div class="kpi-sub">16 regions · 3 areas</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Volume by Storage Location <span>unit dispatch</span></div>
+      <canvas id="cht-log-storage" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Order Volume by Period <span>units & orders</span></div>
+      <canvas id="cht-log-vol" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Volume by Area <span>North / South / West</span></div>
+      <canvas id="cht-log-area" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Orders per Period by Channel <span>transaction frequency</span></div>
+      <canvas id="cht-log-channel-orders" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight good">
+      <h4>✅ Perfect Supply Chain Execution</h4>
+      <p>100% fulfillment rate across all 2,064 transactions. No partial deliveries, no stockouts. The 3 storage locations (North, South, West) handled all orders without incident.</p>
+    </div>
+    <div class="insight warn">
+      <h4>📈 Rapid Volume Ramp</h4>
+      <p>Volume grew from 45,660 units in P1 to 537,046 in P8 — a 1,075% increase in 8 periods. Storage and logistics infrastructure must scale to sustain this growth rate.</p>
+    </div>
+    <div class="insight">
+      <h4>⚖️ Perfectly Balanced Warehouses</h4>
+      <p>02N: 933K units · 02S: 935K units · 02W: 936K units. Distribution is remarkably even, suggesting well-designed routing between 3 geographic areas.</p>
+    </div>
+    <div class="insight warn">
+      <h4>💰 Rising COGS per Period</h4>
+      <p>Cost per unit is rising significantly by P8 (costs up 1,388% vs volume up 1,075%). This may reflect input cost inflation or less efficient sourcing at higher volumes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ FINANCE -->
+<div class="tab-panel" id="panel-finance">
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="kpi-label">Total Revenue</div>
+      <div class="kpi-value">€15.41M</div>
+      <div class="kpi-sub">all periods combined</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-label">Total COGS</div>
+      <div class="kpi-value">€4.23M</div>
+      <div class="kpi-sub">27.4% of revenue</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-label">Gross CM</div>
+      <div class="kpi-value">€11.18M</div>
+      <div class="kpi-sub">72.6% margin</div>
+    </div>
+    <div class="kpi-card yellow">
+      <div class="kpi-label">Peak CM%</div>
+      <div class="kpi-value">76.0%</div>
+      <div class="kpi-sub">Period 4 — best period</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-label">Low CM%</div>
+      <div class="kpi-value">66.7%</div>
+      <div class="kpi-sub">Period 8 — pressure</div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-label">Revenue / Customer</div>
+      <div class="kpi-value">€79,422</div>
+      <div class="kpi-sub">avg across 194 customers</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Revenue vs Cost vs CM by Period <span>EUR thousands</span></div>
+      <canvas id="cht-fin-pnl" height="220"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Contribution Margin % Trend <span>erosion alert</span></div>
+      <canvas id="cht-fin-cm-trend" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="card">
+      <div class="card-title">Revenue by Sales Organization <span>balanced portfolio</span></div>
+      <canvas id="cht-fin-org" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">CM% by Product Flavor <span>margin ranking</span></div>
+      <canvas id="cht-fin-cm-prod" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="card chart-full">
+    <div class="card-title">Period P&L Summary Table <span>EUR</span></div>
+    <div class="table-wrap">
+      <table id="tbl-pnl"></table>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const DATA = {
+  periods: [1,2,3,4,5,6,7,8],
+  revenue: [220184, 1454420, 1904738, 2339048, 2345426, 2341549, 2386387, 2416018],
+  cost:    [54133,  426703,  464541,  561758,  592980,  636839,  683463,  805682],
+  cm:      [166051, 1027717, 1440197, 1777290, 1752447, 1704710, 1702924, 1610335],
+  cm_pct:  [75.4, 70.7, 75.6, 76.0, 74.7, 72.8, 71.4, 66.7],
+  qty:     [45660, 273049, 322382, 376991, 396485, 406745, 446598, 537046],
+  orders:  [26, 141, 148, 150, 150, 150, 149, 150],
+
+  byMaterial: [
+    {label:'500g Strawberry', nv:2345504, qty:443437, cm:1800077, cm_pct:76.7, size:'500g', flavor:'Strawberry'},
+    {label:'1kg Strawberry',  nv:2207278, qty:341546, cm:1428554, cm_pct:64.7, size:'1kg',  flavor:'Strawberry'},
+    {label:'1kg Blueberry',   nv:2156243, qty:353995, cm:1352674, cm_pct:62.7, size:'1kg',  flavor:'Blueberry'},
+    {label:'500g Blueberry',  nv:2134318, qty:414305, cm:1624723, cm_pct:76.1, size:'500g', flavor:'Blueberry'},
+    {label:'1kg Raisin',      nv:1283693, qty:209169, cm:992948,  cm_pct:77.4, size:'1kg',  flavor:'Raisin'},
+    {label:'1kg Mixed Fruit', nv:1082274, qty:180250, cm:709157,  cm_pct:65.5, size:'1kg',  flavor:'Mixed Fruit'},
+    {label:'500g Raisin',     nv:1013958, qty:224859, cm:836320,  cm_pct:82.5, size:'500g', flavor:'Raisin'},
+    {label:'500g Mixed Fruit',nv:960396,  qty:189952, cm:745750,  cm_pct:77.6, size:'500g', flavor:'Mixed Fruit'},
+    {label:'1kg Nut',         nv:957723,  qty:161947, cm:695369,  cm_pct:72.6, size:'1kg',  flavor:'Nut'},
+    {label:'500g Nut',        nv:953368,  qty:217132, cm:757950,  cm_pct:79.5, size:'500g', flavor:'Nut'},
+    {label:'1kg Original',    nv:188310,  qty:37136,  cm:137805,  cm_pct:73.2, size:'1kg',  flavor:'Original'},
+    {label:'500g Original',   nv:124703,  qty:31228,  cm:100346,  cm_pct:80.5, size:'500g', flavor:'Original'},
+  ],
+
+  byFlavor: [
+    {flavor:'Strawberry',  nv:4552783, cm:3228630, cm_pct:71.2, qty:784983},
+    {flavor:'Blueberry',   nv:4290561, cm:2977397, cm_pct:69.7, qty:768300},
+    {flavor:'Raisin',      nv:2297651, cm:1829268, cm_pct:79.7, qty:434028},
+    {flavor:'Mixed Fruit', nv:2042670, cm:1454907, cm_pct:71.2, qty:370202},
+    {flavor:'Nut',         nv:1911091, cm:1453318, cm_pct:76.5, qty:379079},
+    {flavor:'Original',    nv:313013,  cm:238150,  cm_pct:76.1, qty:68364},
+  ],
+
+  byRegion: [
+    {region:'Nrth Rhine Westfalia', nv:4544103, cm:3274164},
+    {region:'Bavaria',              nv:2006232, cm:1453432},
+    {region:'Baden-Württemberg',    nv:1875626, cm:1350811},
+    {region:'Lower Saxony',         nv:1595392, cm:1152508},
+    {region:'Hessen',               nv:1184775, cm:861214},
+    {region:'Berlin',               nv:826222,  cm:608414},
+    {region:'Saxony',               nv:570290,  cm:423107},
+    {region:'Schleswig-Holstein',   nv:549353,  cm:390501},
+    {region:'Rhineland Palatinate', nv:549334,  cm:413169},
+    {region:'Hamburg',              nv:450102,  cm:336550},
+    {region:'Brandenburg',          nv:415247,  cm:299845},
+    {region:'Saxony-Anhalt',        nv:290420,  cm:213036},
+    {region:'Bremen',               nv:221134,  cm:156772},
+    {region:'Mecklenburg-Vorp.',    nv:196933,  cm:142974},
+    {region:'Thuringia',            nv:97941,   cm:77404},
+    {region:'Saarland',             nv:34664,   cm:27769},
+  ],
+
+  byChannel: [
+    {ch:'Channel 10', nv:2300079, cm:1551483, qty:372829, customers:12},
+    {ch:'Channel 12', nv:9119102, cm:6514728, qty:1626141, customers:59},
+    {ch:'Channel 14', nv:3988589, cm:3115460, qty:805986,  customers:123},
+  ],
+
+  byOrg: [
+    {org:'H5', nv:4008267, cm:2942430, qty:720469, customers:161},
+    {org:'I5', nv:4094970, cm:2913016, qty:740165, customers:137},
+    {org:'J5', nv:3816319, cm:2812835, qty:641108, customers:129},
+    {org:'G5', nv:3488214, cm:2513389, qty:703214, customers:154},
+  ],
+
+  byArea: [
+    {area:'North', nv:5115094, qty:933361},
+    {area:'South', nv:5164574, qty:935451},
+    {area:'West',  nv:5128102, qty:936144},
+  ],
+
+  byStorage: [
+    {loc:'02N (North)', qty:933361, nv:5115094},
+    {loc:'02S (South)', qty:935451, nv:5164574},
+    {loc:'02W (West)',  qty:936144, nv:5128102},
+  ],
+
+  topCustomers: [
+    {id:'#80108', nv:387648, cm:281095, qty:60483, orders:16, cm_pct:72.5},
+    {id:'#80105', nv:343066, cm:248794, qty:57040, orders:16, cm_pct:72.5},
+    {id:'#80109', nv:267566, cm:194040, qty:44946, orders:12, cm_pct:72.5},
+    {id:'#80111', nv:244990, cm:177718, qty:38009, orders:11, cm_pct:72.5},
+    {id:'#80157', nv:226963, cm:164649, qty:42520, orders:7,  cm_pct:72.6},
+    {id:'#80159', nv:215681, cm:156419, qty:38651, orders:7,  cm_pct:72.5},
+    {id:'#80110', nv:215341, cm:156222, qty:33484, orders:9,  cm_pct:72.5},
+    {id:'#80161', nv:202710, cm:147065, qty:36319, orders:7,  cm_pct:72.5},
+    {id:'#80164', nv:195026, cm:141444, qty:35653, orders:7,  cm_pct:72.5},
+    {id:'#80153', nv:191382, cm:138802, qty:32485, orders:6,  cm_pct:72.5},
+    {id:'#80154', nv:190100, cm:137876, qty:34693, orders:7,  cm_pct:72.5},
+    {id:'#80133', nv:189395, cm:137362, qty:32449, orders:6,  cm_pct:72.5},
+    {id:'#80131', nv:185730, cm:134705, qty:39452, orders:6,  cm_pct:72.5},
+    {id:'#80146', nv:185526, cm:134557, qty:32525, orders:6,  cm_pct:72.5},
+    {id:'#80169', nv:182364, cm:132264, qty:31326, orders:6,  cm_pct:72.5},
+  ],
+
+  priceByPeriod: {
+    'Strawberry':  [4.86, 5.96, 6.48, 6.67, 6.08, 5.94, 5.58, 5.28],
+    'Blueberry':   [null, 5.14, 6.52, 6.34, 6.31, 5.91, 5.62, 4.79],
+    'Raisin':      [null, null, 6.02, 6.27, 5.81, 5.51, 5.10, 4.41],
+    'Mixed Fruit': [5.31, 5.46, 6.36, 6.86, 6.07, 5.77, 5.63, 4.33],
+    'Nut':         [null, 4.37, 4.92, 5.83, 6.09, 6.14, 4.90, 4.31],
+    'Original':    [null, null, 5.40, 4.62, 5.40, 5.48, 5.08, 3.83],
+  },
+
+  revByPeriodFlavor: {
+    'Strawberry':  [112322, 400001, 449622, 656793, 626046, 596891, 716278, 994830],
+    'Blueberry':   [0,      346500, 411320, 540002, 530100, 492290, 612280, 1357950],
+    'Raisin':      [0,      0,      181220, 332040, 341600, 305740, 408800, 728252],
+    'Mixed Fruit': [107862, 103840, 259950, 291622, 508250, 453140, 318242, 0],
+    'Nut':         [0,      98079,  0,      303000, 207150, 245400, 258280, 799530],
+    'Original':    [0,      0,      108390, 86290,  120450, 122470, 109190, 0],
+  }
+};
+
+// ─── COLORS ─────────────────────────────────────────────────────────────────
+const C = {
+  green:  '#00d4aa', blue: '#74b9ff', purple: '#a29bfe',
+  yellow: '#ffd93d', red:  '#ff6b6b', orange: '#ff9f43',
+  teal:   '#4ecdc4', pink: '#fd79a8', lime: '#55efc4',
+  sky:    '#0984e3',
+};
+const PALETTE = [C.green, C.blue, C.purple, C.yellow, C.orange, C.teal, C.pink, C.red, C.lime, C.sky, '#e17055', '#6c5ce7'];
+const FLAVOR_COLORS = {
+  'Strawberry': C.red, 'Blueberry': C.blue, 'Raisin': C.yellow,
+  'Mixed Fruit': C.orange, 'Nut': C.teal, 'Original': C.purple,
+};
+const fmt = (n) => new Intl.NumberFormat('de-DE', {maximumFractionDigits:0}).format(n);
+const fmtEUR = (n) => '€' + new Intl.NumberFormat('de-DE', {maximumFractionDigits:0}).format(n);
+
+// ─── CHART DEFAULTS ──────────────────────────────────────────────────────────
+Chart.defaults.color = '#8891b8';
+Chart.defaults.borderColor = '#2e3255';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+Chart.defaults.font.size = 12;
+
+function gridOpts() {
+  return { color: 'rgba(46,50,85,0.8)', drawBorder: false };
+}
+function tooltipOpts() {
+  return {
+    backgroundColor: '#1a1d2e',
+    borderColor: '#2e3255',
+    borderWidth: 1,
+    titleColor: '#e8eaf6',
+    bodyColor: '#8891b8',
+    padding: 10,
+  };
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+}
+
+// ─── BUILD CHARTS ────────────────────────────────────────────────────────────
+
+// OVERVIEW
+function buildOverview() {
+  // Revenue / Cost / CM grouped bar
+  new Chart(document.getElementById('cht-overview-waterfall'), {
+    type: 'bar',
+    data: {
+      labels: DATA.periods.map(p => 'P' + p),
+      datasets: [
+        { label: 'Revenue', data: DATA.revenue.map(v=>v/1000), backgroundColor: 'rgba(116,185,255,0.7)', borderRadius: 4 },
+        { label: 'Cost',    data: DATA.cost.map(v=>v/1000),    backgroundColor: 'rgba(255,107,107,0.7)', borderRadius: 4 },
+        { label: 'CM',      data: DATA.cm.map(v=>v/1000),      backgroundColor: 'rgba(0,212,170,0.7)',   borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': €' + fmt(ctx.raw) + 'K' }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } } }
+    }
+  });
+
+  // Revenue by flavor donut
+  new Chart(document.getElementById('cht-overview-donut'), {
+    type: 'doughnut',
+    data: {
+      labels: DATA.byFlavor.map(f => f.flavor),
+      datasets: [{ data: DATA.byFlavor.map(f => f.nv), backgroundColor: DATA.byFlavor.map(f => FLAVOR_COLORS[f.flavor]), borderWidth: 2, borderColor: '#1a1d2e' }]
+    },
+    options: {
+      responsive: true,
+      cutout: '60%',
+      plugins: { legend: { position: 'right' }, tooltip: { callbacks: { label: ctx => ctx.label + ': ' + fmtEUR(ctx.raw) }, ...tooltipOpts() } }
+    }
+  });
+
+  // Region bar
+  const top8 = DATA.byRegion.slice(0,8);
+  new Chart(document.getElementById('cht-overview-region'), {
+    type: 'bar',
+    data: {
+      labels: top8.map(r => r.region),
+      datasets: [{ label: 'Revenue', data: top8.map(r => r.nv/1000), backgroundColor: PALETTE, borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } }, y: { grid: gridOpts() } }
+    }
+  });
+
+  // Channel pie
+  new Chart(document.getElementById('cht-overview-channel'), {
+    type: 'pie',
+    data: {
+      labels: DATA.byChannel.map(c => c.ch + ' (' + c.customers + ' customers)'),
+      datasets: [{ data: DATA.byChannel.map(c => c.nv), backgroundColor: [C.purple, C.green, C.orange], borderWidth: 2, borderColor: '#1a1d2e' }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => ctx.label + ': ' + fmtEUR(ctx.raw) }, ...tooltipOpts() } }
+    }
+  });
+}
+
+// SALES
+function buildSales() {
+  // Revenue trend line
+  new Chart(document.getElementById('cht-sales-trend'), {
+    type: 'line',
+    data: {
+      labels: DATA.periods.map(p => 'Period ' + p),
+      datasets: [
+        { label: 'Revenue', data: DATA.revenue.map(v=>v/1000), borderColor: C.blue, backgroundColor: 'rgba(116,185,255,0.1)', fill: true, tension: 0.4, pointRadius: 5 },
+        { label: 'Orders (×10K)', data: DATA.orders.map(v=>v*10), borderColor: C.yellow, borderDash: [5,5], fill: false, tension: 0.4, pointRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { ...tooltipOpts(), callbacks: { label: ctx => ctx.dataset.label === 'Revenue' ? fmtEUR(ctx.raw*1000) : ctx.raw/10 + ' orders' } } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } } }
+    }
+  });
+
+  // Sales org performance
+  new Chart(document.getElementById('cht-sales-org'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byOrg.map(o => o.org),
+      datasets: [
+        { label: 'Revenue (€K)', data: DATA.byOrg.map(o=>o.nv/1000), backgroundColor: 'rgba(116,185,255,0.7)', borderRadius: 4 },
+        { label: 'CM (€K)',      data: DATA.byOrg.map(o=>o.cm/1000), backgroundColor: 'rgba(0,212,170,0.7)',   borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } } }
+    }
+  });
+
+  // Stacked by material per period
+  const flavors = Object.keys(DATA.revByPeriodFlavor);
+  new Chart(document.getElementById('cht-sales-stack'), {
+    type: 'bar',
+    data: {
+      labels: DATA.periods.map(p => 'P'+p),
+      datasets: flavors.map((fl, i) => ({
+        label: fl,
+        data: DATA.revByPeriodFlavor[fl].map(v=>v/1000),
+        backgroundColor: FLAVOR_COLORS[fl] || PALETTE[i],
+        borderRadius: 2,
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: { x: { stacked: true, grid: gridOpts() }, y: { stacked: true, grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } } }
+    }
+  });
+
+  // Customer table
+  const tbl = document.getElementById('tbl-customers');
+  const maxNV = DATA.topCustomers[0].nv;
+  tbl.innerHTML = `<thead><tr><th>#</th><th>Customer</th><th>Revenue</th><th>CM</th><th>CM%</th><th>Volume</th><th>Orders</th><th>Revenue Share</th></tr></thead>
+  <tbody>` + DATA.topCustomers.map((c,i) => `
+    <tr>
+      <td style="color:var(--text-muted)">${i+1}</td>
+      <td><span class="badge badge-blue">${c.id}</span></td>
+      <td><strong>${fmtEUR(c.nv)}</strong></td>
+      <td>${fmtEUR(c.cm)}</td>
+      <td><span class="badge badge-green">${c.cm_pct}%</span></td>
+      <td>${fmt(c.qty)} ST</td>
+      <td>${c.orders}</td>
+      <td><div class="bar-cell"><div class="bar-mini" style="width:${Math.round(c.nv/maxNV*120)}px"></div><span style="font-size:11px;color:var(--text-muted)">${(c.nv/15407769*100).toFixed(1)}%</span></div></td>
+    </tr>
+  `).join('') + '</tbody>';
+}
+
+// MARKETING
+function buildMarketing() {
+  // Price trend by flavor
+  new Chart(document.getElementById('cht-mkt-price'), {
+    type: 'line',
+    data: {
+      labels: DATA.periods.map(p => 'P'+p),
+      datasets: Object.keys(DATA.priceByPeriod).map((fl, i) => ({
+        label: fl,
+        data: DATA.priceByPeriod[fl],
+        borderColor: FLAVOR_COLORS[fl] || PALETTE[i],
+        backgroundColor: 'transparent',
+        tension: 0.4,
+        pointRadius: 4,
+        spanGaps: true,
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': €' + (ctx.raw||0).toFixed(2) }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => '€'+v.toFixed(2) } } }
+    }
+  });
+
+  // Channel comparison
+  new Chart(document.getElementById('cht-mkt-channel'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byChannel.map(c => c.ch),
+      datasets: [
+        { label: 'Revenue (€K)', data: DATA.byChannel.map(c=>c.nv/1000), backgroundColor: [C.purple, C.green, C.orange], borderRadius: 6 },
+        { label: 'Customers', data: DATA.byChannel.map(c=>c.customers*10), backgroundColor: 'transparent', borderColor: C.yellow, type: 'line', yAxisID: 'y2', tension: 0.4, pointRadius: 6 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label === 'Customers' ? ctx.raw/10 + ' customers' : fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: {
+        x: { grid: gridOpts() },
+        y: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } },
+        y2: { position: 'right', grid: { display: false }, ticks: { callback: v => v/10 + ' cust.' } }
+      }
+    }
+  });
+
+  // Region horizontal
+  new Chart(document.getElementById('cht-mkt-region'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byRegion.map(r => r.region),
+      datasets: [
+        { label: 'Revenue', data: DATA.byRegion.map(r=>r.nv/1000), backgroundColor: DATA.byRegion.map((_,i) => PALETTE[i % PALETTE.length]), borderRadius: 4 },
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } }, y: { grid: gridOpts(), ticks: { font: { size: 11 } } } }
+    }
+  });
+
+  // Area chart
+  new Chart(document.getElementById('cht-mkt-area'), {
+    type: 'radar',
+    data: {
+      labels: ['Revenue (€5M)', 'CM (€3.7M)', 'Volume (933K)', 'Orders', 'Balance'],
+      datasets: [
+        { label: 'North', data: [5115, 3781, 933, 686, 90], borderColor: C.blue,   backgroundColor: 'rgba(116,185,255,0.1)', pointRadius: 5 },
+        { label: 'South', data: [5165, 3789, 935, 688, 95], borderColor: C.green,  backgroundColor: 'rgba(0,212,170,0.1)',   pointRadius: 5 },
+        { label: 'West',  data: [5128, 3761, 936, 690, 88], borderColor: C.orange, backgroundColor: 'rgba(255,159,67,0.1)',  pointRadius: 5 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: tooltipOpts() },
+      scales: { r: { grid: { color: 'rgba(46,50,85,0.8)' }, pointLabels: { font: { size: 11 } }, ticks: { display: false } } }
+    }
+  });
+}
+
+// PRODUCT
+function buildProduct() {
+  // SKU revenue bar
+  new Chart(document.getElementById('cht-prod-sku'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byMaterial.map(m => m.label),
+      datasets: [{ label: 'Revenue', data: DATA.byMaterial.map(m=>m.nv/1000), backgroundColor: DATA.byMaterial.map(m => m.size === '1kg' ? 'rgba(116,185,255,0.8)' : 'rgba(0,212,170,0.8)'), borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => fmtEUR(ctx.raw*1000) + ' — ' + DATA.byMaterial[ctx.dataIndex].size }, ...tooltipOpts() }
+      },
+      scales: { x: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } }, y: { grid: gridOpts(), ticks: { font: { size: 11 } } } }
+    }
+  });
+
+  // CM% by flavor
+  new Chart(document.getElementById('cht-prod-cm'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byFlavor.map(f => f.flavor),
+      datasets: [{
+        label: 'CM%',
+        data: DATA.byFlavor.map(f => (f.cm_pct * 100).toFixed(1)),
+        backgroundColor: DATA.byFlavor.map(f => FLAVOR_COLORS[f.flavor]),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'CM%: ' + ctx.raw + '%' }, ...tooltipOpts() } },
+      scales: {
+        x: { grid: gridOpts() },
+        y: { grid: gridOpts(), min: 60, max: 85, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // Size comparison
+  const sz500 = DATA.byMaterial.filter(m => m.size === '500g');
+  const sz1kg = DATA.byMaterial.filter(m => m.size === '1kg');
+  new Chart(document.getElementById('cht-prod-size'), {
+    type: 'bar',
+    data: {
+      labels: ['Revenue', 'Volume (units)', 'CM'],
+      datasets: [
+        { label: '500g', data: [sz500.reduce((a,m)=>a+m.nv,0)/1000, sz500.reduce((a,m)=>a+m.qty,0)/1000, sz500.reduce((a,m)=>a+m.cm,0)/1000], backgroundColor: 'rgba(0,212,170,0.8)', borderRadius: 4 },
+        { label: '1kg',  data: [sz1kg.reduce((a,m)=>a+m.nv,0)/1000, sz1kg.reduce((a,m)=>a+m.qty,0)/1000, sz1kg.reduce((a,m)=>a+m.cm,0)/1000], backgroundColor: 'rgba(116,185,255,0.8)', borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw) + 'K' }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => v + 'K' } } }
+    }
+  });
+
+  // Volume trend by flavor (simplified)
+  const flavorVols = {
+    'Strawberry': [25367,129023,83963,112457,88225,115974,134253,95721],
+    'Blueberry':  [0,    112057,87438,104611,77094,118948,114553,153599],
+    'Raisin':     [0,    0,     47029,60075, 78681,68826, 76062, 103355],
+    'Mixed Fruit':[20293,4707,  25000,16981, 88841,72932, 63743, 77705],
+    'Nut':        [0,    27262, 64146,66532, 42220,26015, 53032, 99872],
+  };
+  new Chart(document.getElementById('cht-prod-vol-trend'), {
+    type: 'line',
+    data: {
+      labels: DATA.periods.map(p=>'P'+p),
+      datasets: Object.keys(flavorVols).map(fl => ({
+        label: fl,
+        data: flavorVols[fl].map(v=>v/1000),
+        borderColor: FLAVOR_COLORS[fl],
+        backgroundColor: 'transparent',
+        tension: 0.4,
+        pointRadius: 3,
+        spanGaps: true,
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmt(ctx.raw*1000) + ' units' }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => v + 'K' } } }
+    }
+  });
+
+  // Bubble: revenue vs CM% vs volume
+  new Chart(document.getElementById('cht-prod-bubble'), {
+    type: 'bubble',
+    data: {
+      datasets: DATA.byFlavor.map(f => ({
+        label: f.flavor,
+        data: [{ x: f.nv/1000, y: (f.cm_pct*100).toFixed(1), r: Math.sqrt(f.qty/500) }],
+        backgroundColor: FLAVOR_COLORS[f.flavor] + 'aa',
+        borderColor: FLAVOR_COLORS[f.flavor],
+      }))
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'right' },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: Rev ${fmtEUR(ctx.raw.x*1000)}, CM% ${ctx.raw.y}%, Vol ${fmt(Math.pow(ctx.raw.r,2)*500)} units`
+          },
+          ...tooltipOpts()
+        }
+      },
+      scales: {
+        x: { grid: gridOpts(), title: { display: true, text: 'Revenue (€K)', color: '#8891b8' }, ticks: { callback: v => '€'+v+'K' } },
+        y: { grid: gridOpts(), title: { display: true, text: 'Contribution Margin %', color: '#8891b8' }, min: 65, max: 85, ticks: { callback: v => v+'%' } }
+      }
+    }
+  });
+}
+
+// LOGISTICS
+function buildLogistics() {
+  // Storage location
+  new Chart(document.getElementById('cht-log-storage'), {
+    type: 'doughnut',
+    data: {
+      labels: DATA.byStorage.map(s => s.loc),
+      datasets: [{
+        data: DATA.byStorage.map(s => s.qty),
+        backgroundColor: [C.blue, C.green, C.orange],
+        borderWidth: 2, borderColor: '#1a1d2e'
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '55%',
+      plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => ctx.label + ': ' + fmt(ctx.raw) + ' units' }, ...tooltipOpts() } }
+    }
+  });
+
+  // Volume & orders by period
+  new Chart(document.getElementById('cht-log-vol'), {
+    type: 'bar',
+    data: {
+      labels: DATA.periods.map(p => 'P'+p),
+      datasets: [
+        { label: 'Volume (units)', data: DATA.qty.map(v=>v/1000), backgroundColor: 'rgba(116,185,255,0.7)', borderRadius: 4 },
+        { label: 'Orders (×100)', data: DATA.orders.map(v=>v*5), backgroundColor: 'rgba(255,217,61,0.7)', borderRadius: 4, type: 'line', yAxisID: 'y2', fill: false, tension: 0.4, pointRadius: 5 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label === 'Orders (×100)' ? ctx.raw/5 + ' orders' : fmt(ctx.raw*1000) + ' units' }, ...tooltipOpts() } },
+      scales: {
+        x: { grid: gridOpts() },
+        y: { grid: gridOpts(), ticks: { callback: v => v + 'K' } },
+        y2: { position: 'right', grid: { display: false }, ticks: { callback: v => v/5 + ' ord' } }
+      }
+    }
+  });
+
+  // Area volume
+  new Chart(document.getElementById('cht-log-area'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byArea.map(a => a.area),
+      datasets: [{ label: 'Volume', data: DATA.byArea.map(a=>a.qty/1000), backgroundColor: [C.blue, C.green, C.orange], borderRadius: 6 }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => fmt(ctx.raw*1000) + ' units' }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => v + 'K' } } }
+    }
+  });
+
+  // Channel orders per period (simplified)
+  const chOrders = {
+    'Ch 10': [5, 20, 23, 30, 29, 31, 30, 30],
+    'Ch 12': [16, 82, 85, 85, 85, 84, 85, 85],
+    'Ch 14': [5, 39, 40, 35, 36, 35, 34, 35],
+  };
+  new Chart(document.getElementById('cht-log-channel-orders'), {
+    type: 'line',
+    data: {
+      labels: DATA.periods.map(p=>'P'+p),
+      datasets: [
+        { label: 'Ch 10', data: chOrders['Ch 10'], borderColor: C.purple, backgroundColor: 'transparent', tension: 0.4, pointRadius: 4 },
+        { label: 'Ch 12', data: chOrders['Ch 12'], borderColor: C.green,  backgroundColor: 'transparent', tension: 0.4, pointRadius: 4 },
+        { label: 'Ch 14', data: chOrders['Ch 14'], borderColor: C.orange, backgroundColor: 'transparent', tension: 0.4, pointRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), title: { display: true, text: 'Orders', color: '#8891b8' } } }
+    }
+  });
+}
+
+// FINANCE
+function buildFinance() {
+  // P&L chart
+  new Chart(document.getElementById('cht-fin-pnl'), {
+    type: 'bar',
+    data: {
+      labels: DATA.periods.map(p => 'P'+p),
+      datasets: [
+        { label: 'Revenue',  data: DATA.revenue.map(v=>v/1000), backgroundColor: 'rgba(116,185,255,0.6)', borderRadius: 4 },
+        { label: 'COGS',     data: DATA.cost.map(v=>v/1000),    backgroundColor: 'rgba(255,107,107,0.6)', borderRadius: 4 },
+        { label: 'CM',       data: DATA.cm.map(v=>v/1000),      backgroundColor: 'rgba(0,212,170,0.6)',   borderRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } } }
+    }
+  });
+
+  // CM% trend
+  new Chart(document.getElementById('cht-fin-cm-trend'), {
+    type: 'line',
+    data: {
+      labels: DATA.periods.map(p => 'P'+p),
+      datasets: [
+        { label: 'CM%', data: DATA.cm_pct, borderColor: C.green, backgroundColor: 'rgba(0,212,170,0.15)', fill: true, tension: 0.4, pointRadius: 6, pointHoverRadius: 8 },
+        { label: 'Target 73%', data: DATA.periods.map(()=>73), borderColor: C.yellow, borderDash: [6,4], pointRadius: 0, fill: false },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.raw + '%' }, ...tooltipOpts() } },
+      scales: {
+        x: { grid: gridOpts() },
+        y: { grid: gridOpts(), min: 60, max: 80, ticks: { callback: v => v + '%' } }
+      }
+    }
+  });
+
+  // Org revenue
+  new Chart(document.getElementById('cht-fin-org'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byOrg.map(o => 'Org ' + o.org),
+      datasets: [
+        { label: 'Revenue', data: DATA.byOrg.map(o=>o.nv/1000), backgroundColor: [C.blue, C.green, C.purple, C.orange], borderRadius: 6 },
+        { label: 'CM',      data: DATA.byOrg.map(o=>o.cm/1000), backgroundColor: [C.blue+'55', C.green+'55', C.purple+'55', C.orange+'55'], borderRadius: 6 },
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': ' + fmtEUR(ctx.raw*1000) }, ...tooltipOpts() } },
+      scales: { x: { grid: gridOpts() }, y: { grid: gridOpts(), ticks: { callback: v => '€'+v+'K' } } }
+    }
+  });
+
+  // CM% by flavor
+  new Chart(document.getElementById('cht-fin-cm-prod'), {
+    type: 'bar',
+    data: {
+      labels: DATA.byFlavor.map(f => f.flavor),
+      datasets: [{
+        label: 'CM%',
+        data: DATA.byFlavor.map(f => (f.cm_pct * 100).toFixed(1)),
+        backgroundColor: DATA.byFlavor.map(f => FLAVOR_COLORS[f.flavor]),
+        borderRadius: 6
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => 'CM: ' + ctx.raw + '%' }, ...tooltipOpts() } },
+      scales: {
+        x: { grid: gridOpts(), min: 60, max: 85, ticks: { callback: v => v + '%' } },
+        y: { grid: gridOpts() }
+      }
+    }
+  });
+
+  // P&L Table
+  const tbl = document.getElementById('tbl-pnl');
+  tbl.innerHTML = `<thead><tr><th>Period</th><th>Revenue</th><th>COGS</th><th>CM €</th><th>CM%</th><th>Volume</th><th>Orders</th><th>Rev/Order</th><th>Status</th></tr></thead><tbody>` +
+    DATA.periods.map((p,i) => {
+      const rev = DATA.revenue[i], cost = DATA.cost[i], cm = DATA.cm[i], pct = DATA.cm_pct[i];
+      const badge = pct >= 74 ? 'badge-green' : pct >= 70 ? 'badge-yellow' : 'badge-red';
+      const status = pct >= 74 ? '✅ Healthy' : pct >= 70 ? '⚠️ Watch' : '🔴 Alert';
+      return `<tr>
+        <td><strong>P${p}</strong></td>
+        <td>${fmtEUR(rev)}</td>
+        <td style="color:var(--red)">${fmtEUR(cost)}</td>
+        <td style="color:var(--green)">${fmtEUR(cm)}</td>
+        <td><span class="badge ${badge}">${pct}%</span></td>
+        <td>${fmt(DATA.qty[i])}</td>
+        <td>${DATA.orders[i]}</td>
+        <td>${fmtEUR(Math.round(rev/DATA.orders[i]))}</td>
+        <td><span class="badge ${badge}">${status}</span></td>
+      </tr>`;
+    }).join('') + `</tbody>`;
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildOverview();
+buildSales();
+buildMarketing();
+buildProduct();
+buildLogistics();
+buildFinance();
+</script>
+</body>
+</html>

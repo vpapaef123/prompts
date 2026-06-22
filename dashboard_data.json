@@ -1,0 +1,761 @@
+{
+  "summary": {
+    "total_revenue": 15407769.0,
+    "total_cost": 4226099.0,
+    "total_cm": 11181671.0,
+    "avg_cm_pct": 72.9,
+    "total_qty": 2804956,
+    "total_orders": 1064,
+    "total_customers": 194,
+    "fulfillment_rate": 100.0,
+    "num_products": 12,
+    "num_regions": 16
+  },
+  "by_period": [
+    {
+      "SIM_PERIOD": 1,
+      "net_value": 220183.8,
+      "cost": 54132.5,
+      "cm": 166051.3,
+      "qty": 45660,
+      "orders": 26,
+      "cm_pct": 75.4
+    },
+    {
+      "SIM_PERIOD": 2,
+      "net_value": 1454420.02,
+      "cost": 426703.11,
+      "cm": 1027716.91,
+      "qty": 273049,
+      "orders": 141,
+      "cm_pct": 70.7
+    },
+    {
+      "SIM_PERIOD": 3,
+      "net_value": 1904738.1,
+      "cost": 464541.49,
+      "cm": 1440196.61,
+      "qty": 322382,
+      "orders": 148,
+      "cm_pct": 75.6
+    },
+    {
+      "SIM_PERIOD": 4,
+      "net_value": 2339047.85,
+      "cost": 561758.06,
+      "cm": 1777289.79,
+      "qty": 376991,
+      "orders": 150,
+      "cm_pct": 76.0
+    },
+    {
+      "SIM_PERIOD": 5,
+      "net_value": 2345426.2,
+      "cost": 592979.55,
+      "cm": 1752446.65,
+      "qty": 396485,
+      "orders": 150,
+      "cm_pct": 74.7
+    },
+    {
+      "SIM_PERIOD": 6,
+      "net_value": 2341548.5,
+      "cost": 636838.71,
+      "cm": 1704709.79,
+      "qty": 406745,
+      "orders": 150,
+      "cm_pct": 72.8
+    },
+    {
+      "SIM_PERIOD": 7,
+      "net_value": 2386387.25,
+      "cost": 683463.06,
+      "cm": 1702924.19,
+      "qty": 446598,
+      "orders": 149,
+      "cm_pct": 71.4
+    },
+    {
+      "SIM_PERIOD": 8,
+      "net_value": 2416017.65,
+      "cost": 805682.23,
+      "cm": 1610335.42,
+      "qty": 537046,
+      "orders": 150,
+      "cm_pct": 66.7
+    }
+  ],
+  "by_material": [
+    {
+      "MATERIAL_LABEL": "Strawberry Muesli",
+      "MATERIAL_SIZE": "500g",
+      "net_value": 2345504.3,
+      "cost": 545427.51,
+      "cm": 1800076.79,
+      "qty": 443437,
+      "avg_price": 5.4
+    },
+    {
+      "MATERIAL_LABEL": "Strawberry Muesli",
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 2207278.4,
+      "cost": 778724.88,
+      "cm": 1428553.52,
+      "qty": 341546,
+      "avg_price": 6.58
+    },
+    {
+      "MATERIAL_LABEL": "Blueberry Muesli",
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 2156242.77,
+      "cost": 803568.65,
+      "cm": 1352674.12,
+      "qty": 353995,
+      "avg_price": 6.26
+    },
+    {
+      "MATERIAL_LABEL": "Blueberry Muesli",
+      "MATERIAL_SIZE": "500g",
+      "net_value": 2134318.4,
+      "cost": 509595.15,
+      "cm": 1624723.25,
+      "qty": 414305,
+      "avg_price": 5.27
+    },
+    {
+      "MATERIAL_LABEL": "Raisin Muesli",
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 1283693.0,
+      "cost": 290744.91,
+      "cm": 992948.09,
+      "qty": 209169,
+      "avg_price": 6.34
+    },
+    {
+      "MATERIAL_LABEL": "Mixed Fruit Muesli",
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 1082274.3,
+      "cost": 373117.5,
+      "cm": 709156.8,
+      "qty": 180250,
+      "avg_price": 6.11
+    },
+    {
+      "MATERIAL_LABEL": "Raisin Muesli",
+      "MATERIAL_SIZE": "500g",
+      "net_value": 1013958.2,
+      "cost": 177638.61,
+      "cm": 836319.59,
+      "qty": 224859,
+      "avg_price": 4.59
+    },
+    {
+      "MATERIAL_LABEL": "Mixed Fruit Muesli",
+      "MATERIAL_SIZE": "500g",
+      "net_value": 960395.5,
+      "cost": 214645.76,
+      "cm": 745749.74,
+      "qty": 189952,
+      "avg_price": 5.2
+    },
+    {
+      "MATERIAL_LABEL": "Nut Muesli",
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 957723.0,
+      "cost": 262354.14,
+      "cm": 695368.86,
+      "qty": 161947,
+      "avg_price": 6.03
+    },
+    {
+      "MATERIAL_LABEL": "Nut Muesli",
+      "MATERIAL_SIZE": "500g",
+      "net_value": 953368.3,
+      "cost": 195418.8,
+      "cm": 757949.5,
+      "qty": 217132,
+      "avg_price": 4.56
+    },
+    {
+      "MATERIAL_LABEL": "Original Muesli",
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 188309.8,
+      "cost": 50504.96,
+      "cm": 137804.84,
+      "qty": 37136,
+      "avg_price": 5.17
+    },
+    {
+      "MATERIAL_LABEL": "Original Muesli",
+      "MATERIAL_SIZE": "500g",
+      "net_value": 124703.4,
+      "cost": 24357.84,
+      "cm": 100345.56,
+      "qty": 31228,
+      "avg_price": 4.04
+    }
+  ],
+  "by_region": [
+    {
+      "REGION": "Nrth Rhine Westfalia",
+      "net_value": 4544102.92,
+      "cm": 3274163.85,
+      "qty": 824625
+    },
+    {
+      "REGION": "Bavaria",
+      "net_value": 2006232.25,
+      "cm": 1453432.38,
+      "qty": 351243
+    },
+    {
+      "REGION": "Baden-Wurttemberg",
+      "net_value": 1875626.13,
+      "cm": 1350811.17,
+      "qty": 352247
+    },
+    {
+      "REGION": "Lower Saxony",
+      "net_value": 1595392.38,
+      "cm": 1152507.56,
+      "qty": 279244
+    },
+    {
+      "REGION": "Hessen",
+      "net_value": 1184774.85,
+      "cm": 861214.13,
+      "qty": 212655
+    },
+    {
+      "REGION": "Berlin",
+      "net_value": 826222.25,
+      "cm": 608413.57,
+      "qty": 144551
+    },
+    {
+      "REGION": "Saxony",
+      "net_value": 570290.25,
+      "cm": 423107.49,
+      "qty": 111286
+    },
+    {
+      "REGION": "Schleswig-Holstein",
+      "net_value": 549352.69,
+      "cm": 390501.47,
+      "qty": 102613
+    },
+    {
+      "REGION": "Rhineland Palatinate",
+      "net_value": 549334.35,
+      "cm": 413169.19,
+      "qty": 104743
+    },
+    {
+      "REGION": "Hamburg",
+      "net_value": 450101.65,
+      "cm": 336549.59,
+      "qty": 82413
+    },
+    {
+      "REGION": "Brandenburg",
+      "net_value": 415247.2,
+      "cm": 299844.81,
+      "qty": 80709
+    },
+    {
+      "REGION": "Saxony-Anhalt",
+      "net_value": 290420.0,
+      "cm": 213036.4,
+      "qty": 58136
+    },
+    {
+      "REGION": "Bremen",
+      "net_value": 221134.4,
+      "cm": 156771.98,
+      "qty": 38845
+    },
+    {
+      "REGION": "Mecklenburg-Vorpomm.",
+      "net_value": 196932.8,
+      "cm": 142974.31,
+      "qty": 35564
+    },
+    {
+      "REGION": "Thuringia",
+      "net_value": 97940.8,
+      "cm": 77404.23,
+      "qty": 19306
+    },
+    {
+      "REGION": "Saarland",
+      "net_value": 34664.45,
+      "cm": 27768.53,
+      "qty": 6776
+    }
+  ],
+  "by_channel": [
+    {
+      "DISTRIBUTION_CHANNEL": 10,
+      "net_value": 2300078.75,
+      "cm": 1551483.13,
+      "qty": 372829,
+      "customers": 12,
+      "orders": 99
+    },
+    {
+      "DISTRIBUTION_CHANNEL": 12,
+      "net_value": 9119102.07,
+      "cm": 6514727.59,
+      "qty": 1626141,
+      "customers": 59,
+      "orders": 319
+    },
+    {
+      "DISTRIBUTION_CHANNEL": 14,
+      "net_value": 3988588.55,
+      "cm": 3115459.94,
+      "qty": 805986,
+      "customers": 123,
+      "orders": 646
+    }
+  ],
+  "by_org": [
+    {
+      "SALES_ORGANIZATION": "I5",
+      "net_value": 4094970.32,
+      "cm": 2913016.48,
+      "qty": 740165,
+      "customers": 137,
+      "orders": 247
+    },
+    {
+      "SALES_ORGANIZATION": "H5",
+      "net_value": 4008266.5,
+      "cm": 2942429.66,
+      "qty": 720469,
+      "customers": 161,
+      "orders": 328
+    },
+    {
+      "SALES_ORGANIZATION": "J5",
+      "net_value": 3816318.65,
+      "cm": 2812835.49,
+      "qty": 641108,
+      "customers": 129,
+      "orders": 206
+    },
+    {
+      "SALES_ORGANIZATION": "G5",
+      "net_value": 3488213.9,
+      "cm": 2513389.03,
+      "qty": 703214,
+      "customers": 154,
+      "orders": 283
+    }
+  ],
+  "price_pivot": [
+    {
+      "SIM_PERIOD": 1,
+      "Blueberry Muesli": "null",
+      "Mixed Fruit Muesli": 5.312,
+      "Nut Muesli": "null",
+      "Original Muesli": "null",
+      "Raisin Muesli": "null",
+      "Strawberry Muesli": 4.44
+    },
+    {
+      "SIM_PERIOD": 2,
+      "Blueberry Muesli": 5.109,
+      "Mixed Fruit Muesli": 5.46,
+      "Nut Muesli": 4.367,
+      "Original Muesli": "null",
+      "Raisin Muesli": "null",
+      "Strawberry Muesli": 5.815
+    },
+    {
+      "SIM_PERIOD": 3,
+      "Blueberry Muesli": 6.473,
+      "Mixed Fruit Muesli": 6.595,
+      "Nut Muesli": 4.917,
+      "Original Muesli": 5.4,
+      "Raisin Muesli": 5.594,
+      "Strawberry Muesli": 6.419
+    },
+    {
+      "SIM_PERIOD": 4,
+      "Blueberry Muesli": 6.158,
+      "Mixed Fruit Muesli": 6.32,
+      "Nut Muesli": 6.281,
+      "Original Muesli": 4.46,
+      "Raisin Muesli": 6.633,
+      "Strawberry Muesli": 6.562
+    },
+    {
+      "SIM_PERIOD": 5,
+      "Blueberry Muesli": 6.248,
+      "Mixed Fruit Muesli": 5.81,
+      "Nut Muesli": 6.252,
+      "Original Muesli": 4.215,
+      "Raisin Muesli": 5.792,
+      "Strawberry Muesli": 6.315
+    },
+    {
+      "SIM_PERIOD": 6,
+      "Blueberry Muesli": 5.911,
+      "Mixed Fruit Muesli": 5.904,
+      "Nut Muesli": 6.132,
+      "Original Muesli": 4.775,
+      "Raisin Muesli": 5.631,
+      "Strawberry Muesli": 5.731
+    },
+    {
+      "SIM_PERIOD": 7,
+      "Blueberry Muesli": 5.608,
+      "Mixed Fruit Muesli": 5.781,
+      "Nut Muesli": 4.58,
+      "Original Muesli": 5.167,
+      "Raisin Muesli": 5.08,
+      "Strawberry Muesli": 5.564
+    },
+    {
+      "SIM_PERIOD": 8,
+      "Blueberry Muesli": 4.866,
+      "Mixed Fruit Muesli": 4.281,
+      "Nut Muesli": 4.18,
+      "Original Muesli": 3.833,
+      "Raisin Muesli": 4.433,
+      "Strawberry Muesli": 5.284
+    }
+  ],
+  "rev_pivot": [
+    {
+      "SIM_PERIOD": 1,
+      "Blueberry Muesli": 0.0,
+      "Mixed Fruit Muesli": 107861.8,
+      "Nut Muesli": 0.0,
+      "Original Muesli": 0.0,
+      "Raisin Muesli": 0.0,
+      "Strawberry Muesli": 112322.0
+    },
+    {
+      "SIM_PERIOD": 2,
+      "Blueberry Muesli": 568034.62,
+      "Mixed Fruit Muesli": 25548.9,
+      "Nut Muesli": 118792.0,
+      "Original Muesli": 0.0,
+      "Raisin Muesli": 0.0,
+      "Strawberry Muesli": 742044.5
+    },
+    {
+      "SIM_PERIOD": 3,
+      "Blueberry Muesli": 561814.5,
+      "Mixed Fruit Muesli": 164909.7,
+      "Nut Muesli": 311415.6,
+      "Original Muesli": 79952.4,
+      "Raisin Muesli": 250407.65,
+      "Strawberry Muesli": 536238.25
+    },
+    {
+      "SIM_PERIOD": 4,
+      "Blueberry Muesli": 630199.35,
+      "Mixed Fruit Muesli": 106962.8,
+      "Nut Muesli": 417892.2,
+      "Original Muesli": 72191.5,
+      "Raisin Muesli": 385521.35,
+      "Strawberry Muesli": 726280.65
+    },
+    {
+      "SIM_PERIOD": 5,
+      "Blueberry Muesli": 477398.05,
+      "Mixed Fruit Muesli": 514980.9,
+      "Nut Muesli": 263534.9,
+      "Original Muesli": 88911.7,
+      "Raisin Muesli": 448737.55,
+      "Strawberry Muesli": 551863.1
+    },
+    {
+      "SIM_PERIOD": 6,
+      "Blueberry Muesli": 695388.15,
+      "Mixed Fruit Muesli": 429112.6,
+      "Nut Muesli": 159462.2,
+      "Original Muesli": 20737.6,
+      "Raisin Muesli": 384646.3,
+      "Strawberry Muesli": 652201.65
+    },
+    {
+      "SIM_PERIOD": 7,
+      "Blueberry Muesli": 633513.05,
+      "Mixed Fruit Muesli": 367766.3,
+      "Nut Muesli": 240231.6,
+      "Original Muesli": 25598.5,
+      "Raisin Muesli": 379543.45,
+      "Strawberry Muesli": 739734.35
+    },
+    {
+      "SIM_PERIOD": 8,
+      "Blueberry Muesli": 724213.45,
+      "Mixed Fruit Muesli": 325526.8,
+      "Nut Muesli": 399762.8,
+      "Original Muesli": 25621.5,
+      "Raisin Muesli": 448794.9,
+      "Strawberry Muesli": 492098.2
+    }
+  ],
+  "by_area": [
+    {
+      "AREA": "North",
+      "net_value": 5115093.62,
+      "cm": 3723707.18,
+      "qty": 933361
+    },
+    {
+      "AREA": "South",
+      "net_value": 5164574.03,
+      "cm": 3742861.91,
+      "qty": 935451
+    },
+    {
+      "AREA": "West",
+      "net_value": 5128101.72,
+      "cm": 3715101.57,
+      "qty": 936144
+    }
+  ],
+  "by_storage": [
+    {
+      "STORAGE_LOCATION": "02N",
+      "net_value": 5115093.62,
+      "qty": 933361
+    },
+    {
+      "STORAGE_LOCATION": "02S",
+      "net_value": 5164574.03,
+      "qty": 935451
+    },
+    {
+      "STORAGE_LOCATION": "02W",
+      "net_value": 5128101.72,
+      "qty": 936144
+    }
+  ],
+  "cm_trend": [
+    {
+      "SIM_PERIOD": 1,
+      "CONTRIBUTION_MARGIN_PCT": 0.7581
+    },
+    {
+      "SIM_PERIOD": 2,
+      "CONTRIBUTION_MARGIN_PCT": 0.7108
+    },
+    {
+      "SIM_PERIOD": 3,
+      "CONTRIBUTION_MARGIN_PCT": 0.7572
+    },
+    {
+      "SIM_PERIOD": 4,
+      "CONTRIBUTION_MARGIN_PCT": 0.7613
+    },
+    {
+      "SIM_PERIOD": 5,
+      "CONTRIBUTION_MARGIN_PCT": 0.7503
+    },
+    {
+      "SIM_PERIOD": 6,
+      "CONTRIBUTION_MARGIN_PCT": 0.7317
+    },
+    {
+      "SIM_PERIOD": 7,
+      "CONTRIBUTION_MARGIN_PCT": 0.7177
+    },
+    {
+      "SIM_PERIOD": 8,
+      "CONTRIBUTION_MARGIN_PCT": 0.6704
+    }
+  ],
+  "top_customers": [
+    {
+      "CUSTOMER_NUMBER": 80108,
+      "net_value": 387647.7,
+      "cm": 265971.09,
+      "qty": 60483,
+      "orders": 16,
+      "cm_pct": 68.6
+    },
+    {
+      "CUSTOMER_NUMBER": 80105,
+      "net_value": 343065.7,
+      "cm": 240533.39,
+      "qty": 57040,
+      "orders": 16,
+      "cm_pct": 70.1
+    },
+    {
+      "CUSTOMER_NUMBER": 80109,
+      "net_value": 267566.1,
+      "cm": 177687.25,
+      "qty": 44946,
+      "orders": 12,
+      "cm_pct": 66.4
+    },
+    {
+      "CUSTOMER_NUMBER": 80111,
+      "net_value": 244990.0,
+      "cm": 161858.26,
+      "qty": 38009,
+      "orders": 11,
+      "cm_pct": 66.1
+    },
+    {
+      "CUSTOMER_NUMBER": 80157,
+      "net_value": 226962.77,
+      "cm": 153157.65,
+      "qty": 42520,
+      "orders": 7,
+      "cm_pct": 67.5
+    },
+    {
+      "CUSTOMER_NUMBER": 80159,
+      "net_value": 215680.63,
+      "cm": 140249.42,
+      "qty": 38651,
+      "orders": 7,
+      "cm_pct": 65.0
+    },
+    {
+      "CUSTOMER_NUMBER": 80110,
+      "net_value": 215340.85,
+      "cm": 146021.34,
+      "qty": 33484,
+      "orders": 9,
+      "cm_pct": 67.8
+    },
+    {
+      "CUSTOMER_NUMBER": 80161,
+      "net_value": 202709.5,
+      "cm": 143068.88,
+      "qty": 36319,
+      "orders": 7,
+      "cm_pct": 70.6
+    },
+    {
+      "CUSTOMER_NUMBER": 80164,
+      "net_value": 195026.4,
+      "cm": 141065.32,
+      "qty": 35653,
+      "orders": 7,
+      "cm_pct": 72.3
+    },
+    {
+      "CUSTOMER_NUMBER": 80153,
+      "net_value": 191382.15,
+      "cm": 139907.03,
+      "qty": 32485,
+      "orders": 6,
+      "cm_pct": 73.1
+    },
+    {
+      "CUSTOMER_NUMBER": 80154,
+      "net_value": 190099.77,
+      "cm": 131592.38,
+      "qty": 34693,
+      "orders": 7,
+      "cm_pct": 69.2
+    },
+    {
+      "CUSTOMER_NUMBER": 80133,
+      "net_value": 189395.4,
+      "cm": 131988.27,
+      "qty": 32449,
+      "orders": 6,
+      "cm_pct": 69.7
+    },
+    {
+      "CUSTOMER_NUMBER": 80131,
+      "net_value": 185730.45,
+      "cm": 132880.45,
+      "qty": 39452,
+      "orders": 6,
+      "cm_pct": 71.5
+    },
+    {
+      "CUSTOMER_NUMBER": 80146,
+      "net_value": 185525.54,
+      "cm": 132624.01,
+      "qty": 32525,
+      "orders": 6,
+      "cm_pct": 71.5
+    },
+    {
+      "CUSTOMER_NUMBER": 80169,
+      "net_value": 182363.7,
+      "cm": 119251.94,
+      "qty": 31326,
+      "orders": 6,
+      "cm_pct": 65.4
+    }
+  ],
+  "by_size": [
+    {
+      "MATERIAL_SIZE": "1kg",
+      "net_value": 7875521.27,
+      "cm": 5316506.23,
+      "qty": 1284043
+    },
+    {
+      "MATERIAL_SIZE": "500g",
+      "net_value": 7532248.1,
+      "cm": 5865164.43,
+      "qty": 1520913
+    }
+  ],
+  "qty_cm": [
+    {
+      "SIM_PERIOD": 1,
+      "qty": 45660,
+      "cm_pct": 0.7581
+    },
+    {
+      "SIM_PERIOD": 2,
+      "qty": 273049,
+      "cm_pct": 0.7108
+    },
+    {
+      "SIM_PERIOD": 3,
+      "qty": 322382,
+      "cm_pct": 0.7572
+    },
+    {
+      "SIM_PERIOD": 4,
+      "qty": 376991,
+      "cm_pct": 0.7613
+    },
+    {
+      "SIM_PERIOD": 5,
+      "qty": 396485,
+      "cm_pct": 0.7503
+    },
+    {
+      "SIM_PERIOD": 6,
+      "qty": 406745,
+      "cm_pct": 0.7317
+    },
+    {
+      "SIM_PERIOD": 7,
+      "qty": 446598,
+      "cm_pct": 0.7177
+    },
+    {
+      "SIM_PERIOD": 8,
+      "qty": 537046,
+      "cm_pct": 0.6704
+    }
+  ],
+  "material_labels": [
+    "Blueberry Muesli",
+    "Mixed Fruit Muesli",
+    "Nut Muesli",
+    "Original Muesli",
+    "Raisin Muesli",
+    "Strawberry Muesli"
+  ]
+}
