@@ -1,0 +1,31 @@
+{
+  "skill_name": "strategic-project-intelligence",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I also want the strategic picture of the project progress, red flags, opportunities to uncover from press, articles, AIA announcements, yearly and quarterly reviews etc",
+      "expected_output": "Should not guess which project/company 'AIA' refers to or assume a cadence — should ask for the exact subject, what counts as progress for it, delivery channel, and confirm cadence before building the recurring briefing. Once specified, should set up research passes in order (official sources first, then domestic press, then international press, then periodic reports) and structure the output into Progress / Red Flags / Opportunities sections.",
+      "assertions": [
+        "Asks which project/company the briefing should track rather than assuming",
+        "Asks for delivery channel/cadence rather than assuming",
+        "Structures the eventual briefing into Progress, Red Flags, and Opportunities sections",
+        "Prioritizes official/primary sources before press coverage",
+        "Distinguishes domestic press from international press as separate passes"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "The weekly strategic briefing Routine just fired for the Athens International Airport expansion project. It found a new quarterly traffic report showing passenger numbers below the project's stated targets, no new press this week, and a mention of an upcoming subcontractor tender.",
+      "expected_output": "Should structure the findings into three sections: Progress (the quarterly report itself as a data point), Red Flags (passenger numbers missing stated targets, cited to the report), and Opportunities (the upcoming subcontractor tender). Should explicitly note 'no new press this week' rather than omitting that pass, since strategic briefings confirm coverage even when a pass is quiet. Should cite the report as source for the traffic figures.",
+      "assertions": [
+        "Places the missed-target traffic figures under Red Flags",
+        "Places the subcontractor tender under Opportunities",
+        "Explicitly states that no new press turned up, rather than silently omitting it",
+        "Cites the quarterly report as the source for the traffic figures",
+        "Prioritizes the periodic report's numbers over any press paraphrasing"
+      ],
+      "files": []
+    }
+  ]
+}
