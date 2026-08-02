@@ -1,0 +1,40 @@
+{
+  "skill_name": "job-search-alerts",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run a daily search first from credible Greek sources and then from international sources and keep an eye if a position opens to notify me",
+      "expected_output": "Should not guess the target role/location/notification channel — should ask for the exact role or field, location scope, and notification channel before building the automation. Once criteria are given, should search Greek sources first (kariera.gr, skywalker.gr, jobfind.gr, LinkedIn Greece), then international/EU sources (LinkedIn, Indeed, EuroJobs, remoteok, weworkremotely). Should set up a recurring Routine (create_trigger with create_new_session_on_fire) rather than a one-off search, since the user asked for an ongoing daily check.",
+      "assertions": [
+        "Asks for target role/field before proceeding",
+        "Asks for location scope before proceeding",
+        "Asks for notification channel before proceeding",
+        "Searches Greek sources before international sources",
+        "Sets up a recurring automation, not a one-off search",
+        "Uses a self-contained prompt for the recurring Routine"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "The daily job search Routine just fired. It found two new postings on kariera.gr for the target role, both posted this morning, and nothing new internationally.",
+      "expected_output": "Should send exactly one notification covering both new postings (not two separate notifications), including job title, company, location, source, and link for each. Should not report anything about the international pass since nothing new was found there.",
+      "assertions": [
+        "Sends a single combined notification, not one per posting",
+        "Includes title, company, location, source, and link for each posting",
+        "Does not send a separate empty-result message for the international pass"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "The daily job search Routine just fired and found no new postings in either Greek or international sources.",
+      "expected_output": "Should end the run without sending a push notification or emailing the user. Should not report a 'nothing found' message to the user, since a daily null-result notification trains the user to ignore the channel.",
+      "assertions": [
+        "Does not send a notification when nothing matches",
+        "Does not report an empty result to the user"
+      ],
+      "files": []
+    }
+  ]
+}
